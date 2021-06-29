@@ -1,7 +1,11 @@
+import os
 from flask import Flask,request, url_for, redirect, render_template, jsonify, session, flash, send_file
 import pandas as pd
 from werkzeug.utils import secure_filename
 from IPython.display import HTML
+
+
+
 
 
 
@@ -14,12 +18,13 @@ app.secret_key = "abdellatif"
 
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 
+path = os.getcwd()
 
 try:
-    user_df = pd.read_csv('/static/users.csv')
+    user_df = pd.read_csv(path+'/static/users.csv')
 except:
     user_df = pd.DataFrame(columns = ['name', 'email', 'password'])  
-    user_df.to_csv('/static/users.csv', index=False ,header=True)
+    user_df.to_csv(path+'/static/users.csv', index=False ,header=True)
 
 
 ALLOWED_EXTENSIONS = set(['csv', 'xls', 'xlsx', 'ets'])
@@ -37,7 +42,7 @@ def allowed_file(filename):
 
 def getHistorique():
     try:
-        df = pd.read_csv('/static/download/actions_'+str(session['network'])+'.csv', dtype=str)
+        df = pd.read_csv(path+'/static/download/actions_'+str(session['network'])+'.csv', dtype=str)
     except:
         df = pd.DataFrame(columns = ['NCLI', 'status', 'created_at']) 
     return df
@@ -68,11 +73,11 @@ def make_action_meth(file, action):
     df_appended = hist.append(df_action, sort=False)
 
     # here we need to makes update inside our CSV file ....
-    df_appended.to_csv('/static/download/actions_'+str(session['network'])+'.csv', index=False, header=True)
+    df_appended.to_csv(path+'/static/download/actions_'+str(session['network'])+'.csv', index=False, header=True)
 
 
 def get_customers_by_NCLI(NCLI):
-    df_cust = pd.read_csv('/static/all_customers.csv')
+    df_cust = pd.read_csv(path+'/static/all_customers.csv')
     return  df_cust.loc[(df_cust['NCLI'] == NCLI)]
 
 
@@ -151,7 +156,7 @@ def updateProfile():
     session['email'] = str(email)
     session['password'] = str(password)
 
-    user_df.to_csv('/static/users.csv', index=False)
+    user_df.to_csv(path+'/static/users.csv', index=False)
 
     return redirect('/login')
     
@@ -196,15 +201,16 @@ def reviewandexportbl():
 
         if date and action:
 
+            # df = pd.read_csv(path+'/static/download/actions_'+str(session['network'])+'.csv', dtype=str)
             date = pd.to_datetime(date)
             month = date.month
             year = date.year
 
             if action == "review":
                 try:
-                    df = pd.read_csv('/static/download/blist_'+str(session['network'])+'_'+str(month)+'_'+str(year)+'.csv', as_attachment=True)
+                    df = pd.read_csv(path+'/static/download/blist_'+str(session['network'])+'_'+str(month)+'_'+str(year)+'.csv', as_attachment=True)
                 except:
-                    df = pd.read_csv('/static/download/actions_'+str(session['network'])+'.csv', dtype=str)
+                    df = pd.read_csv(path+'/static/download/actions_'+str(session['network'])+'.csv', dtype=str)
                     df = df[pd.to_datetime(df['created_at']) < date]
                     df = df.drop_duplicates(subset=['NCLI'], keep='last')
                     df = df[df['status'] == "added"]
@@ -213,15 +219,15 @@ def reviewandexportbl():
 
             else:
                 try:
-                    send_file('/static/download/blist_'+str(session['network'])+'_'+str(month)+'_'+str(year)+'.csv', as_attachment=True)
+                    send_file(path+'/static/download/blist_'+str(session['network'])+'_'+str(month)+'_'+str(year)+'.csv', as_attachment=True)
                 except:
-                    df = pd.read_csv('/static/download/actions_'+str(session['network'])+'.csv', dtype=str)
+                    df = pd.read_csv(path+'/static/download/actions_'+str(session['network'])+'.csv', dtype=str)
                     df = df[pd.to_datetime(df['created_at']) < date]
                     df = df.drop_duplicates(subset=['NCLI'], keep='last')
                     df = df[df['status'] == "added"]
                     # df = get_customers_by_NCLI(df['NCLI'])
-                    df.to_csv('/static/download/blist_'+str(session['network'])+'_'+str(month)+'_'+str(year)+'.csv', index=False, header=True)
-                    return send_file('/static/download/blist_'+str(session['network'])+'_'+str(month)+'_'+str(year)+'.csv', as_attachment=True)
+                    df.to_csv(path+'/static/download/blist_'+str(session['network'])+'_'+str(month)+'_'+str(year)+'.csv', index=False, header=True)
+                    return send_file(path+'/static/download/blist_'+str(session['network'])+'_'+str(month)+'_'+str(year)+'.csv', as_attachment=True)
                 
     return redirect('/login')
     
