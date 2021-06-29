@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BlackList</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='./bootstrap.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf')}}" crossorigin="anonymous">
+
+</head>
+<body style="background-color: #fafafa;padding-bottom: 80px;">
+
+
+  <!-- loading style -->
+  <div id="myDIV" class="loading"></div>
+
+
+  <!-- navbar -->
+
+  <nav style="background-color: #f2f2f2;" class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('login')}}"><b>BlackList</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul style="font-size: 14px" class="navbar-nav ml-auto text-right">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('settings')}}">Settings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout')}}">Log Out</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <!-- message -->
+  <div id="messageInfo" style="margin-top: 60px" class="container">
+    <div class="text-right" style="margin-bottom: -12px; margin-right: -6px">
+      <i onclick="hideMessageIfo()" style="cursor: pointer;" class="fas fa-times-circle"></i>
+    </div>
+    <div class="message-style">Hi <b>{{session['name']}}</b>, welcome to your IAM client management Blist platform; add and remove customers to and from your blacklist</div>
+  </div>
+
+
+  <!-- Network : moble or fixe -->
+
+  <div style="margin-top: 60px" class="container">
+    <div class="row">
+      <div class="col-md-3 row">
+        <div class="col-md-2">
+          <strong>(1)</strong>
+        </div>
+        <div class="col-md-10">
+          <small>Choose your customers network (Mobile or Fixed Internet). By default, the mobile network is chosen</small>
+        </div>
+      </div>
+
+      <div class="col-md-8 offset-md-1">
+        <div class="row">
+          <div class="col-md-6">
+            <a href="{{ url_for('netMobile')}}" class="col-md-12 btn btn-outline-warning">Mobile Mode</a>
+          </div>
+          <div class="col-md-6">
+            <a href="{{ url_for('netFixe')}}" class="col-md-12 btn btn-outline-warning">Fixed&Internet Mode</a>
+          </div>
+          <div class="col-md-12">
+            <br>
+            Chosen mode : <b>{{session['network']}}</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Make action : add/delete to/from black list -->
+
+  <div style="margin-top: 60px" class="container">
+    <div class="row">
+      <div class="col-md-3 row">
+        <div class="col-md-2">
+          <strong>(2)</strong>
+        </div>
+        <div class="col-md-10">
+          <small>Select the file and then carry out your action | Add-remove- to-from- blacklist.</small>
+        </div>
+      </div>
+
+      <div class="col-md-8 offset-md-1">
+        <form action="{{ url_for('upload_file')}}" method="POST" enctype="multipart/form-data">
+          <div>
+            <label for="file" class="label-file">Select new file</label>
+            <input style="display: none;" id="file" class="input-file" type="file" name="file" required accept=".csv,.xls,.xlsx,.ets" onchange="javascript:updateList()">
+          </div>
+          <div id="fileList"></div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="action" id="added" value="added" checked>
+            <label class="form-check-label" for="add">
+              Add to black list
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="action" id="deleted" value="deleted">
+            <label class="form-check-label" for="delete">
+              Delete from black list
+            </label>
+          </div>
+
+          <div style="margin-top: 15px" class="row">
+            <div class="col-md-12">
+              <button type="submit" class="btn btn-warning">Make it.</button> <span style="margin-left: 15px;">{{value}}</span>
+            </div>  
+            <!-- onclick="submitButtonClick(event)" -->
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- view and export black list -->
+
+  <div style="margin-top: 60px" class="container">
+    <div class="row">
+      <div class="col-md-3 row">
+        <div class="col-md-2">
+          <strong>(3)</strong>
+        </div>
+        <div class="col-md-10">
+          <small>indicate the End date to revise or export the appropriate blacklist.</small>
+        </div>
+      </div>
+
+      <div class="col-md-8 offset-md-1">
+        <div class="row">
+          <div class="col-md-12">
+            <form action="{{ url_for('reviewandexportbl') }}" method="POST">
+              <input style="background: none" class="form-control" type="date" name="date" placeholder="date" required>
+              <div class="form-check" style="margin-top: 6px">
+                <input class="form-check-input" type="radio" name="action" id="review" value="review" checked>
+                <label class="form-check-label" for="review">
+                  Review black list
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="action" id="export" value="export">
+                <label class="form-check-label" for="export">
+                  Export black list .CSV
+                </label>
+              </div>
+              <div style="margin-top: 15px">
+                <button class="btn btn-warning">Make it.</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- show black list -->
+        <div style="margin-top: 20px">
+          {{blackList}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+updateList = function() {
+  var input = document.getElementById('file');
+  var output = document.getElementById('fileList');
+  var children = "";
+  for (var i = 0; i < input.files.length; ++i) {
+      children += '<li>' + input.files.item(i).name + '</li>';
+  }
+  output.innerHTML = '<ul>'+children+'</ul>';
+}
+
+function myFunction() {
+  document.getElementById("myDIV").style.display = "block";
+}
+
+function hideMessageIfo() {
+  document.getElementById("messageInfo").style.display = "none";
+}
+
+
+// function submitButtonClick(event) {
+//     event.preventDefault();
+//     if (!document.getElementById("file").files[0]) {
+//       document.getElementById("myDIV").style.display = "block";
+//     }
+//     else{
+//       Swal.fire('No file selected')
+//     }
+// } 
+
+
+</script>
+
+
+<style type="text/css">
+
+.loading{
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+  z-index: 9999;
+  background: url('{{ url_for('static', filename='./loader2.gif') }}') center no-repeat rgba(255,255,255,0.8);
+}
+
+
+.label-file {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 7px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+}
+.label-file:hover {
+    color: black;
+    background-color: #dfdfdf
+}
+
+/*et on masque le input*/
+.input-file {
+    display: none;
+}
+
+.message-style{
+  padding: 15px 25px; 
+  font-size: 13px; 
+  color: black; 
+  background-color: #F2F2F2; 
+  border: 1 solid black; 
+  border-radius: 4px;
+}
+
+</style>
+
+
+</html>

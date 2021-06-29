@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BlackList</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='./bootstrap.css') }}">
+</head>
+<body style="background-color: #fafafa">
+
+<nav style="background-color: #f2f2f2" class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('login')}}"><b>BlackList</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul style="font-size: 14px" class="navbar-nav ml-auto text-right">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login')}}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout')}}">Log Out</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+ <div class="container" style="margin-top: 80px; margin-bottom: 80px">
+   <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">update profile</div>
+
+                <div class="card-body">
+                    <form action="{{ url_for('updateProfile')}}" method="POST">
+
+
+
+                        <div class="form-group row">
+                            <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
+
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control" name="email" required value="{{session['email']}}">
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label for="oldPassword" class="col-md-4 col-form-label text-md-right">Old Password</label>
+
+                            <div class="col-md-6">
+                                <input id="oldPassword" type="text" class="form-control" name="oldPassword" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control" name="password" required>
+                            </div>
+                        </div>
+
+                        
+                        <div class="form-group row">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">Password confirm</label>
+
+                            <div class="col-md-6">
+                                <input id="password-confirm" type="password" class="form-control" name="passwordConfirm" required>
+                            </div>
+                        </div>                        
+
+
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="submit" class="btn btn-warning">
+                                    update
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+              <p class="message" style="color: red">{{message}}</p> 
+            </div>
+
+        </div>
+    </div>
+</div>
+ </div>
+
+</body>
+
+<style type="text/css">
+.message {
+    margin-top: 20px;
+    width: 100%;
+    padding: 7px 14px;
+    color: #111;
+}
+</style>
+
+
+</html>
