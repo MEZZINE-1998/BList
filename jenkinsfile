@@ -1,5 +1,5 @@
 node {
-   stage('Get Source') {
+   stage('Get Source from Github') {
       // copy source code from local file system and test
       // for a Dockerfile to build the Docker image
       git ('https://github.com/MEZZINE-1998/BList.git')
@@ -7,11 +7,11 @@ node {
          error('dockerfile missing.')
       }
    }
-   stage('Build Docker') {
+   stage('Build Docker image') {
        // build the docker image from the source code using the BUILD_ID parameter in image name
          sh "docker build -t flask-app:v2 ."
    }
-   stage("run docker container"){
-        sh "docker run -p 5001:5001 --name flask-app -d flask-app:v2"
-    }
+   stage("Deploy the App on minikube-K8S"){
+        sh "kubectl apply -f k8sfile.yaml"
+   }
 }
