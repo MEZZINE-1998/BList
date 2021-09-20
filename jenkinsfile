@@ -9,9 +9,9 @@ node {
    }
    stage('Build Docker') {
        // build the docker image from the source code using the BUILD_ID parameter in image name
-         sh "docker build -t flask-app:v1 ."
+         sh "docker build -t flask-app:v2 ."
    }
    stage("run docker container"){
-        sh "docker run -p 5001:5001 --name flask-app -d flask-app:v1"
+        sh "docker run -p 5001:5001 --name flask-app -d flask-app:v2"
     }
 }
