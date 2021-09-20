@@ -1,0 +1,17 @@
+node {
+   stage('Get Source') {
+      // copy source code from local file system and test
+      // for a Dockerfile to build the Docker image
+      git ('https://github.com/MEZZINE-1998/BList.git')
+      if (!fileExists("dockerfile")) {
+         error('dockerfile missing.')
+      }
+   }
+   stage('Build Docker') {
+       // build the docker image from the source code using the BUILD_ID parameter in image name
+         sh "docker build -t flask-app:v2 ."
+   }
+   stage("run docker container"){
+        sh "docker run -p 5001:5001 --name flask-app -d flask-app:v2"
+    }
+}
