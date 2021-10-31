@@ -5,10 +5,11 @@ node {
       //   app.push("${env.BUILD_NUMBER}")            
       //   app.push("latest")        
       //}
-      docker.withRegistry('https://hub.docker.com/', 'Dockerhub') {
-         def customImage = docker.image("mezzine/blist")
-         customImage.push()
+      docker.withRegistry('https://registry.hub.docker.com', 'Dockerhub') {
+         //def customImage = docker.image("mezzine/blist")
+         //customImage.push()
          //sh 'docker push mezzine/blist'
+         sh 'echo hello'
       }
    }
 }
