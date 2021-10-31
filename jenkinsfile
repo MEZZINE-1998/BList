@@ -19,7 +19,7 @@ node {
       //   app.push("${env.BUILD_NUMBER}")            
       //   app.push("latest")        
       //}
-      withCredentials([string(credentialsId: 'Dockerhub', variable: 'dockerhubpsswd')]) {
+      withCredentials([string(credentialsId: 'dockerhub_pass', variable: 'dockerhubpsswd')]) {
          sh "docker login -u mezzine -p ${dockerhubpsswd}"
       }
       sh 'docker push mezzine/blist'
