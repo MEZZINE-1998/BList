@@ -7,20 +7,9 @@ node {
          error('dockerfile missing.')
       }
    }
-   
-   stage('Build Docker image') {
-       // build the docker image from the source code using the BUILD_ID parameter in image name
-       sh 'docker build -t mezzine/blist .'
-   }
-   
-   stage('Push image to Docker Hub'){
-      withCredentials([usernamePassword(credentialsId: 'credentials-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-         sh "docker login -u $USERNAME -p $PASSWORD"
-         sh 'docker push mezzine/blist'
-      }
-   }
+
    
    stage("Deploy the App on minikube-K8S"){
-        sh 'kubectl apply -f k8sfile.yaml'
+        sh 'sudo kubectl apply -f k8sfile.yaml'
    }
 }
