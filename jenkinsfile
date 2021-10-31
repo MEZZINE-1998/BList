@@ -1,7 +1,16 @@
 node {
-   checkout scm
-   stage('Push image'){
-      def customImage = docker.image("mezzine/blist")
-      customImage.push()
+
+   
+   stage('Push image to Docker Hub'){
+      withCredentials([string(credentialsId: 'Dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        //sh "docker login -u ${usernameVariable} -p ${passwordVariable}"
+        sh 'echo $PASSWORD'
+        // also available as a Groovy variable
+        echo USERNAME
+        // or inside double quotes for string interpolation
+        echo "username is $USERNAME"
+      }
+      //sh 'docker push mezzine/blist'
    }
+
 }
