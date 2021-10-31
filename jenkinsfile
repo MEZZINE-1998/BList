@@ -1,28 +1,18 @@
+node {
 
-pipeline { 
-    environment { 
-        registry = "mezzine/blist" 
-        registryCredential = 'Dockerhub' 
-        dockerImage = '' 
-    }
-    agent any 
-    stages { 
-        stage('Cloning our Git') { 
-            git ('https://github.com/MEZZINE-1998/Flask-web-app-IHM-with-CI-CD-pipeline-.git')
-            if (!fileExists("dockerfile")) {
-                error('dockerfile missing.')
-            }
-        } 
-        stage('Building our image') { 
-            dockerImage = docker.build registry + ":$BUILD_NUMBER" 
-        }
-        stage('Deploy our image') { 
-            docker.withRegistry( '', registryCredential ) { 
-                dockerImage.push() 
-            }
-        } 
-        stage('Cleaning up') { 
-            sh "docker rmi $registry:$BUILD_NUMBER" 
-        }
-    }
+   
+   stage('Push image to Docker Hub'){
+      // docker.withRegistry('https://registry.hub.docker.com', '59465104-1eb9-4aa6-b434-045ca8244670') {            
+      //   app.push("${env.BUILD_NUMBER}")            
+      //   app.push("latest")        
+      //}
+      docker.withRegistry( 'credentials', 'Dockerhub' ){
+         sh "docker login -u credentials['username'] -p credentials['password']"
+      }
+      sh 'docker push mezzine/blist'
+   }
+   
+   stage("Deploy the App on minikube-K8S"){
+        sh 'kubectl apply -f k8sfile.yaml'
+   }
 }
