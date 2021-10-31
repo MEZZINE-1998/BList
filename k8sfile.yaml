@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: mezzine/Blist
+        image: mezzine/blist
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5000
