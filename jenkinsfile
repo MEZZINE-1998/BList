@@ -1,8 +1,7 @@
 node {
    checkout scm
    stage('Push image'){
-         def customImage = docker.image("mezzine/blist")
-         customImage.push()
-      }
+      def customImage = docker.image("mezzine/blist")
+      customImage.push()
    }
 }
