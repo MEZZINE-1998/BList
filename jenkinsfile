@@ -1,17 +1,14 @@
 node {
-
-   
-   stage('Push image to Docker Hub'){
+   checkout scm
+   stage('Push image'){
       // docker.withRegistry('https://registry.hub.docker.com', '59465104-1eb9-4aa6-b434-045ca8244670') {            
       //   app.push("${env.BUILD_NUMBER}")            
       //   app.push("latest")        
       //}
       docker.withRegistry( '', 'Dockerhub') {
-         sh 'docker push mezzine/blist'
+         def customImage = docker.image("mezzine/blist")
+         customImage.push()
+         //sh 'docker push mezzine/blist'
       }
-   }
-   
-   stage("Deploy the App on minikube-K8S"){
-        sh 'kubectl apply -f k8sfile.yaml'
    }
 }
