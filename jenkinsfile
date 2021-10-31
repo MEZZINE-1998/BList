@@ -10,16 +10,16 @@ node {
    
    stage('Build Docker image') {
        // build the docker image from the source code using the BUILD_ID parameter in image name
-       sh 'docker build -t mezzine/blist .'
-       // app = docker.build("mezzine/blist")
+       // sh 'docker build -t mezzine/blist .'
+       app = docker.build("mezzine/blist")
    }
    
    stage('Push image to Docker Hub'){
-      //docker.withRegistry('https://registry.hub.docker.com', '59465104-1eb9-4aa6-b434-045ca8244670') {            
-      //   app.push("${env.BUILD_NUMBER}")            
-      //   app.push("latest")        
-      //}
-      sh 'docker push mezzine/blist'
+      docker.withRegistry('https://registry.hub.docker.com', '59465104-1eb9-4aa6-b434-045ca8244670') {            
+         app.push("${env.BUILD_NUMBER}")            
+         app.push("latest")        
+      }
+      // sh 'docker push mezzine/blist'
    }
    
    stage("Deploy the App on minikube-K8S"){
