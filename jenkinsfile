@@ -10,8 +10,8 @@ node {
    
    stage('Build Docker image') {
        // build the docker image from the source code using the BUILD_ID parameter in image name
-       sh 'docker build -t mezzine/Blist:latest .'
-       // app = docker.build("mezzine/Blist")
+       sh 'docker build -t mezzine/blist .'
+       // app = docker.build("mezzine/blist")
    }
    
    stage('Push image to Docker Hub'){
@@ -19,7 +19,7 @@ node {
       //   app.push("${env.BUILD_NUMBER}")            
       //   app.push("latest")        
       //}
-      sh 'docker push mezzine/Blist'
+      sh 'docker push mezzine/blist'
    }
    
    stage("Deploy the App on minikube-K8S"){
