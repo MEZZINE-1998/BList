@@ -2,7 +2,7 @@ node {
 
    
    stage('Push image to Docker Hub'){
-      withCredentials([string(credentialsId: 'credentials-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      withCredentials([usernamePassword(credentialsId: 'credentials-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
         sh 'echo $PASSWORD'
         // also available as a Groovy variable
         echo USERNAME
