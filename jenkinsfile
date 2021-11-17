@@ -13,9 +13,12 @@ node {
          sh 'docker push mezzine/blist'
       }
    }
-
    
-   stage("Deploy the App on minikube-K8S"){
-        sh 'kubectl apply -f k8sfile.yaml'
+   stage("Deploy the App on AKS"){
+      kubernetesDeploy(
+         configs: 'k8sfile.yaml',
+         kubeconfigId: 'kubernetes',
+         enableConfigSubstitution: true
+      )
    }
 }
