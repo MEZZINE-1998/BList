@@ -3,13 +3,11 @@ node {
       git ('https://github.com/MEZZINE-1998/Flask-web-app-IHM-with-CI-CD-pipeline-.git')
    }
    
-    stage('Build Docker image') {
-       sh 'docker build -t mezzine/blist .'
-   }
+
    
    stage('Push image to Docker Hub'){
-      withCredentials([usernamePassword(credentialsId: 'Dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-         sh "docker login -u $USERNAME -p $PASSWORD}"
+      withCredentials([usernamePassword(credentialsId: 'credentials-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
+         sh 'docker login -u $USERNAME -p $PASSWORD',
          sh 'docker push mezzine/blist'
       }
    }
